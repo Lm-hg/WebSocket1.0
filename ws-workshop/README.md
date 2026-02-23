@@ -1,6 +1,6 @@
 # ws-workshop
 
-Mini projet TypeScript + Node.js avec WebSocket.
+Projet WebSocket avec serveur Node.js + frontend React.
 
 ## Prerequis
 
@@ -12,40 +12,50 @@ Mini projet TypeScript + Node.js avec WebSocket.
 ```bash
 cd /Users/pharosi/Dev/GitHub/Hetic/WebSocket1.0/ws-workshop/server
 npm install
+
+cd /Users/pharosi/Dev/GitHub/Hetic/WebSocket1.0/ws-workshop/client
+npm install
 ```
 
-## Lancer le serveur (Exercice 0/1/2)
+## Lancer le projet
+
+Terminal 1 (serveur WebSocket) :
 
 ```bash
 cd /Users/pharosi/Dev/GitHub/Hetic/WebSocket1.0/ws-workshop/server
 npm run dev
 ```
 
-Le serveur ecoute sur `ws://localhost:8080`.
+Terminal 2 (frontend React) :
 
-## Tester dans le navigateur (Exercice 1 et 2)
-
-1. Ouvrir le fichier `/Users/pharosi/Dev/GitHub/Hetic/WebSocket1.0/ws-workshop/client/index.html` dans le navigateur.
-2. Ouvrir la console du navigateur.
-3. Envoyer d'abord un pseudo (premier message) :
-
-```js
-ws.send("Alice")
+```bash
+cd /Users/pharosi/Dev/GitHub/Hetic/WebSocket1.0/ws-workshop/client
+npm run dev
 ```
 
-4. Envoyer ensuite des messages de chat :
+Puis ouvrir l'URL affichee par Vite (souvent `http://localhost:5173`).
 
-```js
-ws.send("Bonjour a tous")
-```
+## Utilisation
 
-## Test multi-clients (Exercice 2)
+1. Saisir un pseudo puis cliquer sur `Valider`.
+2. Ecrire un message puis cliquer sur `Envoyer`.
+3. Ouvrir 2 ou 3 onglets pour simuler plusieurs utilisateurs.
 
-1. Ouvrir 2 ou 3 onglets avec le meme `index.html`.
-2. Dans chaque onglet, definir un pseudo differente (`Alice`, `Gilbert`, `Anna`).
-3. Envoyer des messages dans chaque onglet.
-4. Verifier que :
-- tous les onglets recoivent les messages,
-- les entrees/sorties sont annoncees,
-- les messages sont prefixes par le pseudo (`Alice: ...`).
+## Protocole (Exercice 3)
 
+- Types partages: `/Users/pharosi/Dev/GitHub/Hetic/WebSocket1.0/ws-workshop/shared/types.ts`
+- Le client envoie du JSON:
+  - `{ "type": "set-nick", "nick": "Alice" }`
+  - `{ "type": "chat", "text": "Bonjour" }`
+  - `{ "type": "typing" }`
+- Le serveur repond en JSON avec:
+  - `chat`
+  - `system`
+  - `user-list`
+  - `typing`
+
+## Verification rapide
+
+- Chaque onglet recoit les messages envoyes par les autres.
+- Les arrivees et departs sont annonces dans le flux.
+- Les messages sont prefixes par le pseudo (`Alice: Bonjour`).

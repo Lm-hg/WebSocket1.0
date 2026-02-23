@@ -1,33 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Client WebSocket Chat</title>
+    <title>Salon Vrai Chat</title>
   </head>
   <body>
-    <h1>Client WebSocket Chat</h1>
-    <p>Ouvrez la console du navigateur pour interagir avec le socket.</p>
-
-    <script>
-      const ws = new WebSocket("ws://localhost:8080");
-      window.ws = ws;
-
-      ws.onopen = () => {
-        console.log("Connecte a ws://localhost:8080");
-      };
-
-      ws.onmessage = (event) => {
-        console.log("Message recu :", event.data);
-      };
-
-      ws.onclose = () => {
-        console.log("Connexion fermee");
-      };
-
-      ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
-      };
-    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
