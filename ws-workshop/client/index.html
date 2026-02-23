@@ -9,7 +9,7 @@
   
 </body>
 <script>
-const socket = new WebSocket('ws://localhost:8080');
+const socket = new WebSocket('ws://95a6-185-226-32-80.ngrok-free.app');
 socket.addEventListener('open', (event) => {
   console.log('WebSocket connection opened');
   socket.send('Hello Server!');
