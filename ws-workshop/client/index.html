@@ -76,13 +76,76 @@
   </style>
 </head>
 <body>
-  
+  <h1>💬 Chat WebSocket</h1>
+  <div id="status" class="disconnected">Connexion en cours...</div>
+  <div id="messages"></div>
+  <form id="input-form">
+    <input 
+      type="text" 
+      id="message-input" 
+      placeholder="Entrez votre pseudo ou un message..." 
+      autocomplete="off"
+    >
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <script>
+    const socket = new WebSocket('ws://localhost:8080');
+    const messagesDiv = document.getElementById('messages');
+    const inputField = document.getElementById('message-input');
+    const form = document.getElementById('input-form');
+    const statusDiv = document.getElementById('status');
+    let isConnected = false;
+
+    socket.addEventListener('open', (event) => {
+      console.log('WebSocket connection opened');
+      isConnected = true;
+      statusDiv.textContent = '✅ Connecté';
+      statusDiv.className = 'connected';
+      inputField.focus();
+    });
+
+    socket.addEventListener('message', (event) => {
+      console.log('Received:', event.data);
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message';
+      
+      // Messages système (arrivées/départs)
+      if (event.data.includes('a rejoint') || event.data.includes('a quitte')) {
+        messageDiv.className += ' system-message';
+      }
+      
+      messageDiv.textContent = event.data;
+      messagesDiv.appendChild(messageDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight; // Auto-scroll vers le bas
+    });
+
+    socket.addEventListener('close', (event) => {
+      console.log('WebSocket connection closed');
+      isConnected = false;
+      statusDiv.textContent = '❌ Déconnecté';
+      statusDiv.className = 'disconnected';
+    });
+
+    socket.addEventListener('error', (event) => {
+      console.error('WebSocket error:', event);
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message system-message';
+      messageDiv.textContent = '⚠️ Erreur de connexion';
+      messagesDiv.appendChild(messageDiv);
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const message = inputField.value.trim();
+      
+      if (message && isConnected) {
+        console.log('Sending:', message);
+        socket.send(message);
+        inputField.value = '';
+        inputField.focus();
+      }
+    });
+  </script>
 </body>
-<script>
-const socket = new WebSocket('ws://localhost:8080');
-socket.addEventListener('open', (event) => {
-  console.log('WebSocket connection opened');
-  socket.send('Hello Server!');
-});
-</script>
 </html>
